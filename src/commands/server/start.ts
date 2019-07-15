@@ -108,7 +108,6 @@ export default class Start extends Command {
     platform: string({
       char: 'p',
       description: 'Type of Kubernetes platform. Valid values are \"minikube\", \"minishift\", \"k8s\", \"openshift\", \"microk8s\".',
-      default: 'minikube'
     }),
     'os-oauth': flags.boolean({
       description: 'Enable use of OpenShift credentials to log into Che',
@@ -204,6 +203,10 @@ export default class Start extends Command {
 
     // Platform Checks
     let platformCheckTasks = new Listr(undefined, {renderer: flags['listr-renderer'] as any, collapse: false})
+    if (!flags.platform) {
+      this.error("--platform parameter is mandatory. The command 'chectl server:start --help' will list all available platforms.")
+    }
+
     if (flags.platform === 'minikube') {
       platformCheckTasks.add({
         title: '✈️  Minikube preflight checklist',
